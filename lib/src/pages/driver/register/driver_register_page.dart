@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:uber_clone/src/pages/login/login_controller.dart';
+import 'package:uber_clone/src/pages/driver/register/driver_register_controller.dart';
 import 'package:uber_clone/src/utils/colors.dart' as utils;
+import 'package:uber_clone/src/utils/otp_widget.dart';
 
-import '../../widgets/button_app.dart';
+import '../../../widgets/button_app.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class DriverRegisterPage extends StatefulWidget {
+  const DriverRegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<DriverRegisterPage> createState() => _DriverRegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final LoginController _con = LoginController();
+class _DriverRegisterPageState extends State<DriverRegisterPage> {
+  final DriverRegisterController _con = DriverRegisterController();
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
 
-    print('INIT  STATE');
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    print('INIT  STATE DRIVER');
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       _con.init(context);
       print('METHOD SCHEDULE');
     });
@@ -39,42 +41,65 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 _bannerApp(),
                 _textDescription(),
-                _textLogin(),
-                const SizedBox(
-                  height: 40,
+                _textRegister(),
+                _textLicensePlate(),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 25),
+                  child: OTPFields(
+                    pin1: _con.pin1Controller,
+                    pin2: _con.pin2Controller,
+                    pin3: _con.pin3Controller,
+                    pin4: _con.pin4Controller,
+                    pin5: _con.pin5Controller,
+                    pin6: _con.pin6Controller,
+                  ),
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.17,
-                ),
+                _textFieldUsername(),
                 _textFieldEmail(),
                 _textFieldPassword(),
-                _buttonLogin(),
-                _textDontHaveAccount()
+                _textFieldConfirmPassword(),
+                _buttonRegister(),
               ],
             ),
           )),
     );
   }
 
-  Widget _textDontHaveAccount() {
-    return GestureDetector(
-      onTap: _con.gotoRegisterPage,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 50, top: 20),
-        child: const Text(
-          'Dont have an account?',
-          style: TextStyle(fontSize: 15, color: Colors.grey),
+  Widget _textLicensePlate() {
+    return Container(
+      alignment: Alignment.centerLeft,
+      margin: const EdgeInsets.symmetric(horizontal: 30),
+      child: const Text(
+        'License plates',
+        style: TextStyle(
+          color: Colors.orange,
+          fontSize: 17,
         ),
       ),
     );
   }
 
-  Widget _buttonLogin() {
+  Widget _buttonRegister() {
     return ButtonApp(
-      text: 'Login',
+      text: 'Register',
       color: utils.Colors.uberColor,
       textColor: Colors.white,
-      onPressed: _con.login,
+      onPressed: _con.register,
+    );
+  }
+
+  Widget _textFieldUsername() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+      child: TextField(
+          controller: _con.usernameController,
+          decoration: const InputDecoration(
+              hintText: 'Customer Name',
+              labelText: 'Username ',
+              suffixIcon: Icon(
+                Icons.person_outlined,
+                color: utils.Colors.uberColor,
+              ))),
     );
   }
 
@@ -86,6 +111,21 @@ class _LoginPageState extends State<LoginPage> {
           obscureText: true,
           decoration: const InputDecoration(
               labelText: 'Password',
+              suffixIcon: Icon(
+                Icons.lock_open_outlined,
+                color: utils.Colors.uberColor,
+              ))),
+    );
+  }
+
+  Widget _textFieldConfirmPassword() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+      child: TextField(
+          controller: _con.confirmPasswordController,
+          obscureText: true,
+          decoration: const InputDecoration(
+              labelText: 'Confirm Password',
               suffixIcon: Icon(
                 Icons.lock_open_outlined,
                 color: utils.Colors.uberColor,
@@ -113,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
       alignment: Alignment.centerLeft,
       margin: const EdgeInsets.symmetric(horizontal: 30),
       child: const Text(
-        'Login to access your account',
+        'Let’s get you all set up so you can access your personal account.',
         style: TextStyle(
           color: Colors.black,
           fontSize: 22,
@@ -122,12 +162,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _textLogin() {
+  Widget _textRegister() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 30),
       alignment: Alignment.centerLeft,
       child: Text(
-        'Login'.toUpperCase(),
+        'Register'.toUpperCase(),
         style: const TextStyle(
             color: Colors.black, fontWeight: FontWeight.bold, fontSize: 30),
       ),

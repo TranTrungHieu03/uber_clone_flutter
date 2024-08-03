@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:uber_clone/src/pages/home/home_controller.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final HomeController _con = HomeController();
 
-  HomePage({super.key});
+  @override
+  void initState() {
+    super.initState();
+    print('INIT  STATE');
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _con.init(context);
+      print('METHOD SCHEDULE');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    _con.init(context);
     return Scaffold(
         backgroundColor: Colors.grey[700],
         body: SafeArea(
@@ -28,10 +43,12 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(color: Colors.white, fontSize: 26),
                 ),
                 const SizedBox(height: 30),
-                _imageCustom(context, 'assets/img/icons8-customer-100.png'),
+                _imageCustom(
+                    context, 'assets/img/icons8-customer-100.png', 'client'),
                 _textCustom('Passenger'),
                 const SizedBox(height: 20),
-                _imageCustom(context, 'assets/img/icons8-driver-60.png'),
+                _imageCustom(
+                    context, 'assets/img/icons8-driver-60.png', 'driver'),
                 _textCustom('Driver')
               ],
             ),
@@ -64,9 +81,9 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _imageCustom(BuildContext context, String url) {
+  Widget _imageCustom(BuildContext context, String url, String typeUser) {
     return GestureDetector(
-      onTap: _con.goToLoginPage,
+      onTap: () => _con.goToLoginPage(typeUser),
       child: CircleAvatar(
         backgroundImage: AssetImage(url),
         radius: 50,
