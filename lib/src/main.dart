@@ -42,7 +42,7 @@ class _MyState extends State<MyApp> {
       title: 'Flor',
       initialRoute: 'home',
       routes: {
-        'home': (BuildContext context) => HomePage(),
+        'home': (BuildContext context) => const HomePage(),
         'login': (BuildContext context) => const LoginPage(),
         'client/register': (BuildContext context) => const ClientRegisterPage(),
         'driver/register': (BuildContext context) => const DriverRegisterPage(),

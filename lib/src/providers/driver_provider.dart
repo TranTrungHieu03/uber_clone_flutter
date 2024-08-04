@@ -18,9 +18,12 @@ class DriverProvider {
     return Future.error(errorMessage);
   }
 
-  Future<Driver> getById(String id) async {
+  Future<Driver?> getById(String id) async {
     DocumentSnapshot document = await _ref.doc(id).get();
-    Driver driver = Driver.fromJson(document.data() as Map<String, dynamic>);
-    return driver;
+    if (document.data() != null) {
+      Driver driver = Driver.fromJson(document.data() as Map<String, dynamic>);
+      return driver;
+    }
+    return null;
   }
 }

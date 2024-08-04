@@ -69,7 +69,7 @@ class LoginController {
             await _authProvider.signOut();
           }
         } else if (_typeUser == 'driver') {
-          Driver driver =
+          Driver? driver =
               await _driverProvider.getById(_authProvider.getUser()!.uid);
           print('DRIVER: $driver');
           if (driver != null) {
